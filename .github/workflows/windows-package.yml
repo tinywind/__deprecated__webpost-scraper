@@ -1,0 +1,29 @@
+name: Windows package check
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-package:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --no-fund --no-audit
+      - run: npm run react:build
+      - run: npm run electron:build
+      - name: Verify Windows installer was built
+        shell: pwsh
+        run: |
+          $installers = @(Get-ChildItem dist -File -Filter '*.exe')
+          if ($installers.Count -eq 0) { throw 'Windows installer was not produced' }
+          $installers | Select-Object Name, Length
