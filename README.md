@@ -2,6 +2,14 @@
 
 Webpost Scraper is an Electron application designed for collecting posts from websites. application for effective web scraping.
 
+## Development
+
+Use Node.js 22.12 or later; verification uses Node.js 24. Run `npm ci`, then `npm run react:build` to type-check, lint, and build the renderer. The renderer uses Vite with relative asset paths so the packaged Electron application can load it from disk. `npm run dev` keeps the development server on port 3000.
+
+The existing `react-app` lint rules are retained through `eslint-config-react-app`, with its TypeScript parser and plugin updated together for TypeScript 6. ESLint remains on version 8 because that configuration requires it.
+
+`npm run electron:build` builds the Windows installer with publishing disabled. Linux verification uses `npx electron-builder --linux --dir --publish never`. Runtime verification intercepts automatic startup registration, update checks, and desktop notifications in a test fixture; it does not change those production behaviors. Windows installer execution and live update delivery are not verified.
+
 ## Features
 
 - **Electron**: Facilitates the creation of native desktop applications using web technologies.
